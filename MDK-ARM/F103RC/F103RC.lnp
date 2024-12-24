@@ -1,0 +1,26 @@
+--cpu Cortex-M3
+"f103rc\startup_stm32f103xe.o"
+"f103rc\oled.o"
+"f103rc\main.o"
+"f103rc\gpio.o"
+"f103rc\tim.o"
+"f103rc\stm32f1xx_it.o"
+"f103rc\stm32f1xx_hal_msp.o"
+"f103rc\stm32f1xx_hal_gpio_ex.o"
+"f103rc\stm32f1xx_hal_tim.o"
+"f103rc\stm32f1xx_hal_tim_ex.o"
+"f103rc\stm32f1xx_hal.o"
+"f103rc\stm32f1xx_hal_rcc.o"
+"f103rc\stm32f1xx_hal_rcc_ex.o"
+"f103rc\stm32f1xx_hal_gpio.o"
+"f103rc\stm32f1xx_hal_dma.o"
+"f103rc\stm32f1xx_hal_cortex.o"
+"f103rc\stm32f1xx_hal_pwr.o"
+"f103rc\stm32f1xx_hal_flash.o"
+"f103rc\stm32f1xx_hal_flash_ex.o"
+"f103rc\stm32f1xx_hal_exti.o"
+"f103rc\system_stm32f1xx.o"
+--library_type=microlib --strict --scatter "F103RC\F103RC.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "F103RC.map" -o F103RC\F103RC.axf
