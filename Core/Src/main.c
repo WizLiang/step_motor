@@ -120,9 +120,11 @@ void UpdateStepper(void) {
     } else {
         current_step = (current_step == STEP_1) ? STEP_4 : (StepSequence)(current_step - 1);
     }
+		if( 25 <= Temperature){
     // 设置对应的引脚高电平，其余低电平
     HAL_GPIO_WritePin(STEP_GPIO_PORT, STEP_PIN1 | STEP_PIN2 | STEP_PIN3 | STEP_PIN4, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(STEP_GPIO_PORT, step_sequence[current_step], GPIO_PIN_SET);
+		}
     
     step_count++;
     
@@ -135,10 +137,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void AdjustStepperSpeed(void) {
     // 映射温度到定时器ARR范围
+    // 18°C -> ARR = 1000 (较慢)
+    // 30°C -> ARR = 200 (较快)
+    
     
     uint16_t min_temp = 18;
     uint16_t max_temp = 33;
-    uint16_t min_arr = 2000;
+    uint16_t min_arr = 500;
     uint16_t max_arr = 10000;
     
     if(Temperature < min_temp) Temperature = min_temp;
@@ -430,6 +435,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	OLED_Init();//OLED��ʼ��  
 	OLED_Clear();//����
+	
+	OLED_ShowString(0, 0, "The temperature is ");
 	GetTemp();               //��ȡ�¶�
 	GetTemp();     
 
@@ -455,12 +462,14 @@ while(1){
 
 		//HAL_Delay(1000);//�ȴ�1S 
   }
+	uint cnt_div;
 	while(1){
  		GetTemp();		//�ٴλ�ȡ�¶�
-	  OLED_Clear();            //OLED����  
-		if(Temperature<=26 || (cnt++)%2==0 )
-		OLED_ShowNum(100,6,Temperature,3,16);//��ʾ�¶�
-
+	  //OLED_Clear();            //OLED����  
+	  OLED_ShowNum(100,6,Temperature,3,16);//��ʾ�¶�
+		cnt_div= (Temperature > 24 && Temperature <30)?(50 -Temperature): 10 ;
+		if(Temperature<=24 || (cnt++)%5000==0 )
+		OLED_Fill(100, 6, 127, 7, 0);
 		break;
 	}
 }
