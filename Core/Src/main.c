@@ -63,6 +63,7 @@ void ReadID (void);//��ȡID
 void TemperatuerResult(void);
 void SystemClock_Config(void);
 unsigned long Count;
+uint cnt_div;
 
 const uint16_t  phasecw[4] ={GPIO_PIN_9,GPIO_PIN_8,GPIO_PIN_7,GPIO_PIN_6};//��ת�����ͨ����D-C-B-A
 uchar phaseccw[4]={GPIO_PIN_0,GPIO_PIN_1,GPIO_PIN_2,GPIO_PIN_5};//��ת�����ͨ����A-B-C-D
@@ -451,30 +452,20 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-while(1){
-  while (1)
-  {
-    /* USER CODE END WHILE */
-    /* USER CODE BEGIN 3 */
-//		for(int i = 0;i <10;i++)
-//		MotorCW();   //��ת
-    AdjustStepperSpeed();    // 根据温度调整步进频率
-		break;
-
-		//HAL_Delay(1000);//�ȴ�1S 
-  }
-	uint cnt_div;
 	while(1){
+    AdjustStepperSpeed();    // 根据温度调整步进频率
+
  		GetTemp();		//�ٴλ�ȡ�¶�
-	  //OLED_Clear();            //OLED����  
-	  OLED_Fill(100, 6, 127, 7, 0);
-		cnt_div= (Temperature > 24 && Temperature <30)?(30 -Temperature): 10 ;
-		if(Temperature<=TEMP_LOW || (cnt++)%cnt_div==0 ){
-		OLED_ShowNum(100,6,Temperature,3,16);//��ʾ�¶�
-		}
-		break;
+		cnt++;
+		cnt_div = (Temperature >= 24 && Temperature <30) ? (32 -Temperature) : 1;
+		
+		if(Temperature<TEMP_LOW ||(Temperature>=TEMP_LOW && (cnt%cnt_div==0)))
+			OLED_ShowNum(100,6,Temperature,3,16);//��ʾ�¶�
+	  
+		//OLED_Clear();
+		if(Temperature>TEMP_LOW && (cnt%(4 * cnt_div)==2))
+			OLED_Fill();
 	}
-}
   /* USER CODE END 3 */
 }
 
