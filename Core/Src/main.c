@@ -77,6 +77,7 @@ uchar phaseccw[4]={GPIO_PIN_0,GPIO_PIN_1,GPIO_PIN_2,GPIO_PIN_5};//��ת��
 #define STEP_PIN3 GPIO_PIN_8 // PC8
 #define STEP_PIN4 GPIO_PIN_9 // PC9
 #define STEP_GPIO_PORT GPIOC
+#define TEMP_LOW 24
 
 // 步进序列定义
 const uint16_t step_sequence[4] = {
@@ -120,7 +121,7 @@ void UpdateStepper(void) {
     } else {
         current_step = (current_step == STEP_1) ? STEP_4 : (StepSequence)(current_step - 1);
     }
-		if( 25 <= Temperature){
+		if( TEMP_LOW < Temperature){
     // 设置对应的引脚高电平，其余低电平
     HAL_GPIO_WritePin(STEP_GPIO_PORT, STEP_PIN1 | STEP_PIN2 | STEP_PIN3 | STEP_PIN4, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(STEP_GPIO_PORT, step_sequence[current_step], GPIO_PIN_SET);
@@ -466,10 +467,11 @@ while(1){
 	while(1){
  		GetTemp();		//�ٴλ�ȡ�¶�
 	  //OLED_Clear();            //OLED����  
-	  OLED_ShowNum(100,6,Temperature,3,16);//��ʾ�¶�
-		cnt_div= (Temperature > 24 && Temperature <30)?(50 -Temperature): 10 ;
-		if(Temperature<=24 || (cnt++)%5000==0 )
-		OLED_Fill(100, 6, 127, 7, 0);
+	  OLED_Fill(100, 6, 127, 7, 0);
+		cnt_div= (Temperature > 24 && Temperature <30)?(30 -Temperature): 10 ;
+		if(Temperature<=TEMP_LOW || (cnt++)%cnt_div==0 ){
+		OLED_ShowNum(100,6,Temperature,3,16);//��ʾ�¶�
+		}
 		break;
 	}
 }
