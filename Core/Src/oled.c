@@ -70,7 +70,7 @@ void OLED_Clear(void)
 	} //¸üÐÂÏÔÊ¾
 }
 
-void OLED_Fill(u8 x0, u8 y0, u8 x1, u8 y1, u8 color)
+void OLED_Fill(void)
 {
 //    u8 x, y;
 //    u8 data = (color) ? 0xFF : 0x00; // 0xFF????,0x00????
